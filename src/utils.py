@@ -2,22 +2,26 @@ import json
 import datetime
 
 
-def last_five_operation():
+def read_json():
     with open("operation.json", 'r') as file:
         read_file = json.load(file)
-        read_file.reverse()
-        executed_list = []
-        for i in read_file:
-            if 'state' in i.keys():
-                if i['state'] == 'EXECUTED':
-                    executed_list.append(i)
-                else:
-                    continue
+        return read_file
+
+
+def last_five_operation(read_file):
+    read_file.reverse()
+    executed_list = []
+    for i in read_file:
+        if 'state' in i.keys():
+            if i['state'] == 'EXECUTED':
+                executed_list.append(i)
             else:
                 continue
-        get_file = executed_list[0:5]
-        get_file.reverse()
-        return get_file
+        else:
+            continue
+    get_file = executed_list[0:5]
+    get_file.reverse()
+    return get_file
 
 
 def give_operation(get_file):
@@ -33,8 +37,10 @@ def from_operation(operation):
         split_from = operation['from'].split(' ')
         if split_from[0] == 'Счет':
             return f"{split_from[0]} **{split_from[1][-4:]}"
+        elif len(split_from) > 2:
+            return f"{split_from[0]} {split_from[1]} {split_from[-1][0:4]} {split_from[-1][4:6]}** **** {split_from[-1][-4:]}"
         else:
-            return f"{split_from[0]} {split_from[1][0:4]} {split_from[1][5:7]}** **** {split_from[1][-4:]}"
+            return f"{split_from[0]} {split_from[1][0:4]} {split_from[1][4:6]}** **** {split_from[1][-4:]}"
     else:
         return ''
 
@@ -43,10 +49,12 @@ def to_operation(operation):
     split_to = operation['to'].split(' ')
     if split_to[0] == 'Счет':
         return f"{split_to[0]} **{split_to[1][-4:]}"
+    elif len(split_to) > 2:
+        return f"{split_to[0]} {split_to[1]} {split_to[-1][0:4]} {split_to[-1][4:6]}** **** {split_to[-1][-4:]}"
     else:
-        return f"{split_to[0]} {split_to[1][0:4]} {split_to[1][5:7]}** **** {split_to[1][-4:]}"
+        return f"{split_to[0]} {split_to[1][0:4]} {split_to[1][4:6]}** **** {split_to[1][-4:]}"
 
-
-# print(last_five_operation())
+# print(read_json())
+# print(last_five_operation(read_json()))
 # print(give_operation(last_five_operation()))
-# print(card_number(last_five_operation()))
+# print(to_operation(last_five_operation()))
